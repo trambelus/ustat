@@ -42,6 +42,7 @@ def upload():
 			VALUES (?, ?, ?)""", timestamp, pixels, roomid)
 		db.commit()
 		db.close()
+		return 200
 
 	elif request.method == 'GET':
 		return 403
