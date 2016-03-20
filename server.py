@@ -7,6 +7,8 @@ import sqlite3
 import time
 import shelve
 
+DB_NAME = 'ustat.db3'
+
 app = Flask(__name__)
 app.secret_key = 'vOaZrSbR8ZIpCAeU'
 
@@ -14,13 +16,35 @@ with open('data.csv','r') as f:
 	csvdata = f.read()
 csvdata = csvdata.replace('\n','\\n')
 
+# Connects to the database. Creates it if it needs to.
+def init_db():
+	db = sqlite3.connect(DB_NAME)
+	db.execute("""CREATE TABLE IF NOT EXISTS stats
+		timestamp DATE NOT NULL,
+		pixels INT,
+		roomid INT
+	""")
+	return db
+
 @app.route('/')
 def main():
 	return None
 
 @app.route('/ustat/upload', methods=['GET','POST'])
 def upload():
-	return None
+	if request.method == 'POST':
+		
+		db = init_db()
+		timestamp = request.form['timestamp']
+		pixels = request.form['pixels']
+		roomid = request.form['roomid']
+		db.execute("""INSERT INTO stats (timestamp, pixels, roomid)
+			VALUES (?, ?, ?)""", timestamp, pixels, roomid)
+		db.commit()
+		db.close()
+
+	elif request.method == 'GET':
+		return 403
 
 @app.route('/favicon.ico')
 def favicon():
