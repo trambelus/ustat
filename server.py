@@ -20,7 +20,7 @@ csvdata = csvdata.replace('\n','\\n')
 def init_db():
 	db = sqlite3.connect(DB_NAME)
 	db.execute("""CREATE TABLE IF NOT EXISTS stats
-		timestamp DATE NOT NULL,
+		timestamp DATE,
 		pixels INT,
 		roomid INT
 	""")
@@ -28,7 +28,7 @@ def init_db():
 
 @app.route('/')
 def main():
-	return None
+	return 200
 
 @app.route('/ustat/upload', methods=['GET','POST'])
 def upload():
