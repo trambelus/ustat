@@ -51,6 +51,5 @@ def main():
 			headers = {'Auth':'8spWsLd38ji08Tpc'}
 			myData = {'pixels': white[0]}
 			rsp = requests.post('http://trambel.us/rooms/upload', data=myData, headers=headers)
-
 if __name__ == '__main__':
 	main()
