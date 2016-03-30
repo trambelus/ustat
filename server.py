@@ -34,13 +34,12 @@ def get_csv():
 
 @app.route('/')
 def main():
-	return 200
+	return 'Hi!'
 
 @app.route('/ustat/upload', methods=['GET','POST'])
 def upload():
 	if request.method == 'POST':
-		
-		return str(request.form)
+
 		db = init_db()
 		timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 		pixels = request.form['pixels']
@@ -49,10 +48,10 @@ def upload():
 			VALUES (?, ?, ?)""", (timestamp, pixels, roomid))
 		db.commit()
 		db.close()
-		return 200
+		return 'Success'
 
 	elif request.method == 'GET':
-		return 403
+		return 'Forbidden'
 
 @app.route('/favicon.ico')
 def favicon():
