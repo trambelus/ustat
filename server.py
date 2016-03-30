@@ -30,8 +30,8 @@ def get_csv():
 	db = init_db()
 	res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
 	csv = '\n'.join([','.join(map(str,c)) for c in res])
+	csv = 'date,pixels\n' + csv
 	csv = csv.replace('\n','\\n')
-	csv = csv.replace(' ','_')
 	return csv
 
 @app.route('/')
@@ -73,10 +73,10 @@ def rooms():
 
 		flash('Authentication successful')
 
-	#csvdata = get_csv()
-	with open('data.csv','r') as f:
-		csvdata = f.read()
-	csvdata = csvdata.replace('\n','\\n')
+	csvdata = get_csv()
+	# with open('data.csv','r') as f:
+	# 	csvdata = f.read()
+	# csvdata = csvdata.replace('\n','\\n')
 	return render_template('index.html', csvdata=csvdata)
 
 def main():
