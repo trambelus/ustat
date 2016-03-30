@@ -19,11 +19,11 @@ csvdata = csvdata.replace('\n','\\n')
 # Connects to the database. Creates it if it needs to.
 def init_db():
 	db = sqlite3.connect(DB_NAME)
-	db.execute("""CREATE TABLE IF NOT EXISTS stats
+	db.execute("""CREATE TABLE IF NOT EXISTS stats (
 		timestamp DATE,
 		pixels INT,
 		roomid INT
-	""")
+	)""")
 	return db
 
 def get_csv():
