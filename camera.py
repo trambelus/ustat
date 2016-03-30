@@ -48,7 +48,7 @@ def main():
 			print (white[0]) #number of white pixels
 
 			headers = {'Auth':'8spWsLd38ji08Tpc'}
-			myData = {'pixels': white[0]}
+			myData = {'pixels': white[0], 'roomid':0}
 			rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers)
 	except KeyboardInterrupt:
 		print ("keyboard interrupt")
