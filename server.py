@@ -40,6 +40,7 @@ def main():
 def upload():
 	if request.method == 'POST':
 		
+		return str(request.form)
 		db = init_db()
 		timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 		pixels = request.form['pixels']
