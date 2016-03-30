@@ -30,6 +30,7 @@ def get_csv():
 	db = init_db()
 	res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
 	csv = '\n'.join([','.join(map(str,c)) for c in res])
+	csvdata = csvdata.replace('\n','\\n')
 	return csv
 
 @app.route('/')
