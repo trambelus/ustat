@@ -26,6 +26,12 @@ def init_db():
 	""")
 	return db
 
+def get_csv():
+	db = init_db()
+	res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+	csv = '\n'.join([','.join(map(str,c)) for c in res])
+	return csv
+
 @app.route('/')
 def main():
 	return 200
@@ -35,7 +41,7 @@ def upload():
 	if request.method == 'POST':
 		
 		db = init_db()
-		timestamp = request.form['timestamp']
+		timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 		pixels = request.form['pixels']
 		roomid = request.form['roomid']
 		db.execute("""INSERT INTO stats (timestamp, pixels, roomid)
@@ -65,6 +71,7 @@ def rooms():
 
 		flash('Authentication successful')
 
+	csvdata = get_csv()
 	return render_template('index.html', csvdata=csvdata)
 
 def main():
