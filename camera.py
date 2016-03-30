@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from PIL import Image, ImageFilter, ImageChops
-from imgurpython import ImgurClient
 import picamera
 import math, operator
 import time
