@@ -3,7 +3,6 @@ from PIL import Image, ImageFilter, ImageChops
 import picamera
 import math, operator
 import time
-import requests
 
 camera = picamera.PiCamera()
 
