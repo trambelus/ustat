@@ -40,12 +40,13 @@ def main():
 def upload():
 	if request.method == 'POST':
 		
+		return str(request.form)
 		db = init_db()
 		timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 		pixels = request.form['pixels']
 		roomid = request.form['roomid']
 		db.execute("""INSERT INTO stats (timestamp, pixels, roomid)
-			VALUES (?, ?, ?)""", timestamp, pixels, roomid)
+			VALUES (?, ?, ?)""", (timestamp, pixels, roomid))
 		db.commit()
 		db.close()
 		return 200
