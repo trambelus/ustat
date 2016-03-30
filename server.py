@@ -19,29 +19,36 @@ csvdata = csvdata.replace('\n','\\n')
 # Connects to the database. Creates it if it needs to.
 def init_db():
 	db = sqlite3.connect(DB_NAME)
-	db.execute("""CREATE TABLE IF NOT EXISTS stats
-		timestamp DATE NOT NULL,
+	db.execute("""CREATE TABLE IF NOT EXISTS stats (
+		timestamp DATE,
 		pixels INT,
 		roomid INT
-	""")
+	)""")
 	return db
+
+def get_csv():
+	db = init_db()
+	res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+	csv = '\n'.join([','.join(map(str,c)) for c in res])
+	return csv
 
 @app.route('/')
 def main():
-	return None
+	return 200
 
 @app.route('/ustat/upload', methods=['GET','POST'])
 def upload():
 	if request.method == 'POST':
 		
 		db = init_db()
-		timestamp = request.form['timestamp']
+		timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
 		pixels = request.form['pixels']
 		roomid = request.form['roomid']
 		db.execute("""INSERT INTO stats (timestamp, pixels, roomid)
 			VALUES (?, ?, ?)""", timestamp, pixels, roomid)
 		db.commit()
 		db.close()
+		return 200
 
 	elif request.method == 'GET':
 		return 403
@@ -64,6 +71,7 @@ def rooms():
 
 		flash('Authentication successful')
 
+	csvdata = get_csv()
 	return render_template('index.html', csvdata=csvdata)
 
 def main():
