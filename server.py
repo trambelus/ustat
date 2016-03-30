@@ -73,7 +73,10 @@ def rooms():
 
 		flash('Authentication successful')
 
-	csvdata = get_csv()
+	#csvdata = get_csv()
+	with open('data.csv','r') as f:
+		csvdata = f.read()
+	csvdata = csvdata.replace('\n','\\n')
 	return render_template('index.html', csvdata=csvdata)
 
 def main():
