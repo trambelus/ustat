@@ -45,7 +45,7 @@ def upload():
 		pixels = request.form['pixels']
 		roomid = request.form['roomid']
 		db.execute("""INSERT INTO stats (timestamp, pixels, roomid)
-			VALUES (?, ?, ?)""", timestamp, pixels, roomid)
+			VALUES (?, ?, ?)""", (timestamp, pixels, roomid))
 		db.commit()
 		db.close()
 		return 200
