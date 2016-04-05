@@ -26,9 +26,59 @@ def init_db():
 	)""")
 	return db
 
-def get_csv():
+def get_csv(period='total'):
 	db = init_db()
-	res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+	
+	if period == 'total':
+		res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+	elif period == 'day':
+		res = db.execute("""
+			SELECT z.hour,
+			100*CAST(a.N AS FLOAT)/T sun,
+			100*CAST(b.N AS FLOAT)/T mon,
+			100*CAST(c.N AS FLOAT)/T tue,
+			100*CAST(d.N AS FLOAT)/T wed,
+			100*CAST(e.N AS FLOAT)/T thu,
+			100*CAST(f.N AS FLOAT)/T fri,
+			100*CAST(g.N AS FLOAT)/T sat
+			FROM (
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    GROUP BY hour) z
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '0' GROUP BY hour) a
+				ON (z.hour = a.hour)
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '1' GROUP BY hour) b
+				ON (z.hour = b.hour)
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '2' GROUP BY hour) c
+				ON (z.hour = c.hour)
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '3' GROUP BY hour) d
+				ON (z.hour = d.hour)
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '4' GROUP BY hour) e
+				ON (z.hour = e.hour)
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '5' GROUP BY hour) f
+				ON (z.hour = f.hour)
+			  	LEFT JOIN
+				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM comments
+				    AND STRFTIME('%w',timestamp) = '6' GROUP BY hour) g
+				ON (z.hour = g.hour)
+			  	LEFT JOIN
+				  (SELECT COUNT(*) T FROM comments)
+			)
+			""").fetchall()
+	elif period == 'week':
+
+
 	csv = '\n'.join([','.join(map(str,c)) for c in res])
 	csv = 'date,pixels\n' + csv
 	csv = csv.replace('\n','\\n')
@@ -73,11 +123,11 @@ def rooms():
 
 		flash('Authentication successful')
 
-	csvdata = get_csv()
+	csv_total = get_csv()
 	# with open('data.csv','r') as f:
 	# 	csvdata = f.read()
 	# csvdata = csvdata.replace('\n','\\n')
-	return render_template('index.html', csvdata=csvdata)
+	return render_template('index.html', csv_total=csv_total)
 
 def main():
 	app.run(host='0.0.0.0', port=80, debug=True)

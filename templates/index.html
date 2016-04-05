@@ -26,75 +26,111 @@ body {
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
 
-var csvdata = "{{ csvdata }}";
+<div id="tabs" data-bind="foreach: tabs">    
+    <div class="tab" data-bind="css: {selected: $parent.selectedTab() == id()}, text: name, click: $parent.selectedTab.bind($parent, id())"></div>
+</div>
+<div id="tabContent" data-bind="foreach: tabs">
+    <div data-bind="if: $parent.selectedTab() == id()">
+        <span data-bind="text: text"></span>
+    </div>
+</div>
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+<script type="text/javascript">
 
-var formatDate = d3.time.format("%d-%b-%y");
+  var csv_total = "{{ csv_total }}";
+  var csv_day   = "{{ csv_day }}";
+  var csv_week  = "{{ csv_week }}";
 
-var x = d3.time.scale()
-    .range([0, width]);
+  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
-var y = d3.scale.linear()
-    .range([height, 0]);
+  var formatDate = d3.time.format("%d-%b-%y");
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+  var x = d3.time.scale()
+      .range([0, width]);
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
+  var y = d3.scale.linear()
+      .range([height, 0]);
 
-var line = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.pixels); });
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left");
 
-function type(d) {
-  console.log(d)
-  d.date = formatDate.parse(d.date);
-  d.pixels = +d.pixels;
-  return d;
+  var line = d3.svg.line()
+      .x(function(d) { return x(d.date); })
+      .y(function(d) { return y(d.pixels); });
+
+  var vis = d3.select('body')
+    .append('svg:svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr('class', 'viz')
+        .append('svg:g');
+
+  function type(d) {
+    d.date = formatDate.parse(d.date);
+    d.pixels = +d.pixels;
+    return d;
+  }
+
+  function makeGraph(data) {
+
+    var svg = vis.selectAll('path');
+
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain(d3.extent(data, function(d) { return d.pixels; }));
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Relative occupancy");
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", line);
+
+    return svg;
+  }
+
+  data = d3.csv.parse(csvdata, type);
+
+  svg = makeGraph(data);
+
+  function TabsViewModel(){
+    var self = this;
+    self.Tab = function(id, name, text, selected){
+        var tab = this;
+        tab.id = ko.observable(id);
+        tab.name = ko.observable(name);
+        tab.text = ko.observable(text);
+        return tab;
+    };
+    self.selectedTab = ko.observable(1);
+    self.tabs = new Array();
+    self.tabs.push(new self.Tab(1, 'Total'));
+    self.tabs.push(new self.Tab(2, 'By day'));
+    self.tabs.push(new self.Tab(3, 'By week'));
+
+    return self;
 }
 
-function display(data) {
-
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-  y.domain(d3.extent(data, function(d) { return d.pixels; }));
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Relative occupancy");
-
-  svg.append("path")
-      .datum(data)
-      .attr("class", "line")
-      .attr("d", line);
-}
-
-data = d3.csv.parse(csvdata, type);
-
-display(data);
-
+ko.applyBindings(new TabsViewModel());
 </script>
