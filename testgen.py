@@ -94,7 +94,7 @@ def render():
 	csv_heatmap = [[i[0], j, i[j+1]/mm] for i in res for j in range(len(i)-1)]
 	#print(csv_heatmap)
 
-	with open("templates\\index.html",'r') as f:
+	with open("templates/index.html",'r') as f:
 		html = f.read()
 		html = html.replace("{{ csv_linear }}", str(csv_linear))
 		html = html.replace("{{ csv_heatmap }}", str(csv_heatmap))
