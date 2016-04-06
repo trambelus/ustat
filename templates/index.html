@@ -118,7 +118,7 @@ $(function () {
 
         tooltip: {
             formatter: function () {            
-                return '<b>' + this.point.value + '%</b> occupied on <b>' + this.series.yAxis.categories[this.point.y] + '</b> at <b>' +  this.series.xAxis.categories[this.point.x] + ':00</b>';
+                return '<b>' + Math.round(this.point.value) + '%</b> occupied on <b>' + this.series.yAxis.categories[this.point.y] + '</b> at <b>' +  this.series.xAxis.categories[this.point.x] + ':00</b>';
             }
         },
 
