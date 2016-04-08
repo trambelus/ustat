@@ -111,10 +111,8 @@ def upload():
 def calibration():
 	if request.method == 'POST':
 		# Uploading calibration image
-		print("calibrate: "  + str(request.files))
 		if 'calibration' in request.files:
-			print("Calibration file in request")
-			recv_file = request.files['file']
+			recv_file = request.files['calibration']
 			filename = 'calibration.png'
 			recv_file.save('static/%s' % filename)
 			return "Upload successful"
