@@ -119,7 +119,8 @@ def calibration():
 		abort(400)
 
 	elif request.method == 'GET':
-		return render_template('calibration.html', filename='calibration.png')
+		lu = time.strftime('%Y%m%d%H%M%S')
+		return render_template('calibration.html', filename='calibration.png', ct=lu)
 
 @app.route('/favicon.ico')
 def favicon():
