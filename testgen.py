@@ -10,7 +10,39 @@ import time
 import webbrowser
 from datetime import timedelta, datetime
 
+
+
+hours = [
+	( -4, 1), # 5
+	( -6, 2), # 6
+	( -6, 3), # 7
+	( -8,10), # 8
+	(-10,14), # 9
+	(-10,18), # 10
+	(-20,28), # 11
+	(-18,16), # 12
+	( -9,22), # 13
+	(-20,24), # 14
+	(-20,30), # 15
+	(-20,26), # 16
+	(-20,20), # 17
+	(-20,18), # 18
+	(-20,19), # 19
+	(-20,12), # 20
+	(-16, 6), # 21
+	(-16, 4), # 22
+	(-16, 2), # 23
+	(-12, 4), # 0
+	(-16, 1), # 1
+	(-16, 1), # 2
+	(-16, 1), # 3
+	(-12, 1), # 4
+]
+
 def render():
+
+	events = [(ri(9,17),ri(0,4)) for _ in range(4)]
+	print(events)
 
 	def daterange(start_date, end_date):
 	    for n in range(int((end_date - start_date).days)):
@@ -25,18 +57,25 @@ def render():
 	""")
 
 	c_date = datetime(2016, 1, 1)
-	end_date = datetime(2016,1,8)
+	end_date = datetime(2016, 1, 15)
 	pixels = ri(1,1500)
 	pixels = 0
 
 	while c_date < end_date:
 		timestamp = c_date.strftime("%Y-%m-%d %H:%M:%S")
 		c_date = c_date + timedelta(minutes=5)
-		pixels += ri(-10,10)
+		minmax = [h if c_date.weekday() < 5 else int(h*0.4) for h in hours[c_date.hour]]
+		if (c_date.hour, c_date.weekday()) in events:
+			minmax[1] *= 2
+
+		if pixels > 400:
+			pixels -= 15
+
+		pixels += ri(*minmax)
 		if pixels < 0:
 			pixels *= -1
 		db.execute("""INSERT INTO stats (timestamp, pixels, roomid)
-			VALUES (?,?,?);""",(timestamp,pixels,0))
+			VALUES (?,?,?);""",(timestamp,pixels+ri(-10,10),0))
 
 	db.commit()
 
