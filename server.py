@@ -148,7 +148,7 @@ def rooms():
 
 def main():
 	try:
-		app.run(host='0.0.0.0', port=80, debug=False)
+		app.run(host='0.0.0.0', port=80, debug=True)
 	except OSError:
 		app.run(host='0.0.0.0', port=9861, debug=False)
 
