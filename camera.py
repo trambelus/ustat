@@ -11,6 +11,7 @@ def main():
 		print('Inside of main')
 		#testing
 		#put all in a while loop, always wait for a signal to take another photo and process again
+		watchDog_t = 0 # This is for the watchdog timer; Calibration Mode
 		while (1):
 			#recv_data = 5
 			print('Infinite while')
@@ -48,7 +49,14 @@ def main():
 
 			headers = {'Auth':'8spWsLd38ji08Tpc'}
 			myData = {'pixels': white[0], 'roomid':0}
-			rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers)
+			
+			# ***Calibration Mode***
+			calPicture = {'Calibration' : img1}
+			if watchDog_t == 60: # If true this stops posting the calibration picture after 10 minutes
+				rsp = requests.post('http://trambel.us/ustat/upload', data=calPicture, headers=headers) # This should be calibration mode
+			else:
+				rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers) # This should be graph data
+			watchDog_t += 1
 	except KeyboardInterrupt:
 		print ("keyboard interrupt")
 
