@@ -49,13 +49,15 @@ def main():
 
 			headers = {'Auth':'8spWsLd38ji08Tpc'}
 			myData = {'pixels': white[0], 'roomid':0}
-			
+
 			# ***Calibration Mode***
-			calPicture = {'Calibration' : img1}
-			if watchDog_t == 60: # If true this stops posting the calibration picture after 10 minutes
-				rsp = requests.post('http://trambel.us/ustat/upload', data=calPicture, headers=headers) # This should be calibration mode
+			toSend = img2.resize((400, 400), Image.ANTIALIAS)
+			toSend.save('latest.png')
+			calPicture = {'calibration': open('latest.png','rb')}
+			if watchDog_t < 61: # If true this stops posting the calibration picture after 10 minutes
+				rsp = requests.post('http://trambel.us/ustat/calibrate', files=calPicture, headers=headers) # calibration mode
 			else:
-				rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers) # This should be graph data
+				rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers) # graph data
 			watchDog_t += 1
 	except KeyboardInterrupt:
 		print ("keyboard interrupt")
