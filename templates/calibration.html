@@ -1,0 +1,11 @@
+<html>
+	<body>
+
+	{% if filename %}
+		<img src="{{ url_for('static',filename=filename)+'?'+ct}}" id="roomImage" alt="Calibratoin image" width="400" height="400"/>
+	{% else %}
+		<p> No calibration image found. </p>
+	{% endif %}
+
+	</body>
+</html>
