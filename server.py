@@ -105,7 +105,22 @@ def upload():
 		return 'Success'
 
 	elif request.method == 'GET':
-		return 'Forbidden'
+		abort(403)
+
+@app.route('/ustat/calibrate', methods=['GET','POST'])
+def calibration():
+	if request.method == 'POST':
+		# Uploading calibration image
+		if 'calibration' in request.files:
+			recv_file = request.files['calibration']
+			filename = 'calibration.png'
+			recv_file.save('static/%s' % filename)
+			return "Upload successful"
+		abort(400)
+
+	elif request.method == 'GET':
+		lu = time.strftime('%Y%m%d%H%M%S')
+		return render_template('calibration.html', filename='calibration.png', ct=lu)
 
 @app.route('/favicon.ico')
 def favicon():
@@ -113,17 +128,17 @@ def favicon():
 
 @app.route('/ustat', methods=['GET','POST'])
 def rooms():
-	if request.method == 'POST':
-		with open('hash.txt','r') as f:
-			hash_s = f.readlines()[0]
+	# if request.method == 'POST':
+	# 	with open('hash.txt','r') as f:
+	# 		hash_s = f.readlines()[0]
 
-		hash_f = hashlib.new('sha256')
-		hash_f.update(bytes(request.form['password'],'UTF-8'))
+	# 	hash_f = hashlib.new('sha256')
+	# 	hash_f.update(bytes(request.form['password'],'UTF-8'))
 
-		if hash_f.hexdigest() != hash_s:
-			return render_template('index.html',error='Invalid password')
+	# 	if hash_f.hexdigest() != hash_s:
+	# 		return render_template('index.html',error='Invalid password')
 
-		flash('Authentication successful')
+	# 	flash('Authentication successful')
 
 	#csv_total = get_csv()
 	# with open('data.csv','r') as f:
@@ -136,7 +151,7 @@ def main():
 	try:
 		app.run(host='0.0.0.0', port=80, debug=True)
 	except OSError:
-		app.run(host='0.0.0.0', port=9861, debug=True)
+		app.run(host='0.0.0.0', port=9861, debug=False)
 
 if __name__ == '__main__':
 	main()
