@@ -1,9 +1,9 @@
-#!/usr/bin/env python
 # ustat
-# Last Edit: 4/13/2016; Chris Cox
+# Last Edit: 4/20/2016; Chris Cox
 # Edit Comments: 
 #	1) Added global variable to change the time in between pictures
-#	2) 
+#	2) Added watch dog timer
+#	3) Added correct bash command for python3
 
 from PIL import Image, ImageFilter, ImageChops
 import picamera
