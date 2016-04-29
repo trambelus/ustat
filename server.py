@@ -128,24 +128,24 @@ def favicon():
 
 @app.route('/ustat', methods=['GET','POST'])
 def rooms():
-	# if request.method == 'POST':
-	# 	with open('hash.txt','r') as f:
-	# 		hash_s = f.readlines()[0]
+	if request.method == 'POST':
+		with open('hash.txt','r') as f:
+			hash_s = f.readlines()[0]
 
-	# 	hash_f = hashlib.new('sha256')
-	# 	hash_f.update(bytes(request.form['password'],'UTF-8'))
+		hash_f = hashlib.new('sha256')
+		hash_f.update(bytes(request.form['password'],'UTF-8'))
 
-	# 	if hash_f.hexdigest() != hash_s:
-	# 		return render_template('index.html',error='Invalid password')
+		if hash_f.hexdigest() != hash_s:
+			return render_template('index.html',error='Invalid password')
 
-	# 	flash('Authentication successful')
+		flash('Authentication successful')
 
-	#csv_total = get_csv()
-	# with open('data.csv','r') as f:
-	# 	csvdata = f.read()
-	# csvdata = csvdata.replace('\n','\\n')
-	#return render_template('index.html', csv_total=csv_total)
-	return testgen.render()
+	csv_total = get_csv()
+	with open('data.csv','r') as f:
+		csvdata = f.read()
+	csvdata = csvdata.replace('\n','\\n')
+	return render_template('index.html', csv_total=csv_total)
+	# return testgen.render()
 
 def main():
 	try:
