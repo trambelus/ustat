@@ -49,7 +49,7 @@ def main():
 				print("Check New Calibration Photo")
 			else:
 				time.sleep(DELAY_RUN) # Delay to take new pictures
-				print ("Sixty Seconds")
+				print ("Waited Ten Seconds")
 				camera.capture('dump.jpg')
 				time.sleep(3)
 				camera.capture('orig.jpg') 
@@ -71,13 +71,15 @@ def main():
 				diff = Image.open("diff.jpg").convert('1')
 				black, white = diff.getcolors()
 
-				print (black[0]) #number of black pixels
-				print (white[0]) #number of white pixels
+				print ("Number of Black Pixels: ", black[0]) #number of black pixels
+				print ("Number of White Pixels: ", white[0]) #number of white pixels
 
 				headers = {'Auth':'8spWsLd38ji08Tpc'}
 				myData = {'pixels': white[0], 'roomid':0}
 
 				rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers) # graph data
+
+				print("Posted New Pixel Count To Server")
 
 			watchDog_t += 1 # Increasing the watchdog timer value
 	except KeyboardInterrupt:
