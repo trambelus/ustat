@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # ustat
 # Last Edit: 4/20/2016; Chris Cox
 # Edit Comments: 
@@ -12,7 +13,7 @@ import time
 import requests
 camera = picamera.PiCamera()
 
-DELAY_RUN = 60 # 60 second delay in between pictures
+DELAY_RUN = 10 # 10 second delay in between pictures
 DELAY_CALIBRATION = 10 # 10 second delay in between pictures
 
 def main():
@@ -20,10 +21,9 @@ def main():
 		# put all in a while loop, always wait for a signal to take another photo and process again
 		watchDog_t = 0 # This is for the watchdog timer; Calibration Mode
 		while (1):
-			if watchDog_t < 61: # If FALSE; Stops posting the calibration picture after 10 minutes
 				# ***Calibration Mode***
 				time.sleep(DELAY_CALIBRATION) # Delay to take new pictures
-				print ("Ten Seconds")
+				print ("Waited Ten Seconds For New Calibration")
 				camera.capture('dump.jpg')
 				time.sleep(3)
 				camera.capture('orig.jpg') 
@@ -45,6 +45,7 @@ def main():
 				toSend.save('latest.png')
 				calPicture = {'calibration': open('latest.png','rb')}
 				rsp = requests.post('http://trambel.us/ustat/calibrate', files=calPicture, headers=headers) # calibration mode
+				print("Check New Calibration Photo")
 			else:
 				time.sleep(DELAY_RUN) # Delay to take new pictures
 				print ("Sixty Seconds")
