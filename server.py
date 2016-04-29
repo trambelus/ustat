@@ -33,6 +33,9 @@ def get_csv(period='total'):
 	
 	if period == 'total':
 		res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+		csv_linear = str([["Date.parse(\"{}\")".format(tup[i]) if i == 0 else tup[i]
+			for i in range(len(tup))] for tup in res]).replace("'","")
+		return res
 	elif period == 'day':
 		res = db.execute("""
 			SELECT z.hour,
