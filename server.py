@@ -83,7 +83,7 @@ def get_csv_heatmap():
 	""").fetchall()
 
 	#print(res)
-	res = [[rr for rr in r if rr != None else 0] for r in res]
+	res = [[rr if rr != None else 0 for rr in r] for r in res]
 	mm = max([max(r) for r in res])/100
 	csv_heatmap = [[i[0], j, i[j+1]/mm] for i in res for j in range(len(i)-1)]
 	return csv_heatmap
