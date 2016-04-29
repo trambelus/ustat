@@ -6,6 +6,7 @@ import hashlib
 import sqlite3
 import time
 import shelve
+import sys
 
 import testgen
 
@@ -153,10 +154,11 @@ def rooms():
 	# return testgen.render()
 
 def main():
+	debug = (len(sys.argv) > 1 and sys.argv[1] == 'debug')
 	try:
-		app.run(host='0.0.0.0', port=80, debug=False)
+		app.run(host='0.0.0.0', port=80, debug=debug)
 	except OSError:
-		app.run(host='0.0.0.0', port=9861, debug=False)
+		app.run(host='0.0.0.0', port=9861, debug=debug)
 
 if __name__ == '__main__':
 	main()
