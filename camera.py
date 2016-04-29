@@ -21,7 +21,7 @@ def main():
 		# put all in a while loop, always wait for a signal to take another photo and process again
 		watchDog_t = 0 # This is for the watchdog timer; Calibration Mode
 		while (1):
-			if watchDog_t < 1: # If FALSE; Stops posting the calibration picture after 16 Seconds
+			if watchDog_t < 8: # If FALSE; Stops posting the calibration picture after 2 minutes
 				# ***Calibration Mode***
 				time.sleep(DELAY_CALIBRATION) # Delay to take new pictures
 				print ("Waited Ten Seconds For New Calibration")
