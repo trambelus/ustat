@@ -145,7 +145,12 @@ def rooms():
 
 	csv_linear = get_csv()
 	#csv_linear = csv_linear.replace('\n','\\n')
-	return render_template('index.html', csv_linear=csv_linear)
+	with open("templates/index.html",'r') as f:
+		html = f.read()
+		html = html.replace("{{ csv_linear }}", str(csv_linear))
+		
+	# return render_template('index.html', csv_linear=csv_linear)
+	return html
 	# return testgen.render()
 
 def main():
