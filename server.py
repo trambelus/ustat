@@ -79,10 +79,10 @@ def get_csv_heatmap():
 		    WHERE STRFTIME('%w',timestamp) = '0' GROUP BY hour) g
 		ON (z.hour = g.hour)
 	)
-""").fetchall()
+	""").fetchall()
 
 	#print(res)
-	mm = max([max(r) for r in res])/100
+	mm = max([max([rr if rr != None for rr in r]) for r in res])/100
 	csv_heatmap = [[i[0], j, i[j+1]/mm] for i in res for j in range(len(i)-1)]
 	return csv_heatmap
 
@@ -154,7 +154,7 @@ def rooms():
 
 def main():
 	try:
-		app.run(host='0.0.0.0', port=80, debug=True)
+		app.run(host='0.0.0.0', port=80, debug=False)
 	except OSError:
 		app.run(host='0.0.0.0', port=9861, debug=False)
 
