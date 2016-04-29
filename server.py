@@ -33,6 +33,9 @@ def get_csv(period='total'):
 	
 	if period == 'total':
 		res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+		csv_linear = str([["Date.parse(\"{}\")".format(tup[i]) if i == 0 else tup[i]
+			for i in range(len(tup))] for tup in res]).replace("'","")
+		return csv_linear
 	elif period == 'day':
 		res = db.execute("""
 			SELECT z.hour,
@@ -140,11 +143,14 @@ def rooms():
 
 		flash('Authentication successful')
 
-	csv_total = get_csv()
-	with open('data.csv','r') as f:
-		csvdata = f.read()
-	csvdata = csvdata.replace('\n','\\n')
-	return render_template('index.html', csv_total=csv_total)
+	csv_linear = get_csv()
+	#csv_linear = csv_linear.replace('\n','\\n')
+	with open("templates/index.html",'r') as f:
+		html = f.read()
+		html = html.replace("{{ csv_linear }}", str(csv_linear))
+		
+	# return render_template('index.html', csv_linear=csv_linear)
+	return html
 	# return testgen.render()
 
 def main():

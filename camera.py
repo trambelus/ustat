@@ -53,6 +53,7 @@ def main():
 				except:
 					print("Connection Failed: Check Server Status")
 					continue
+				watchDog_t += 1 # Increasing the watchdog timer value
 			else:
 				time.sleep(DELAY_RUN) # Delay to take new pictures
 				print ("Waited Ten Seconds")
