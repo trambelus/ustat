@@ -6,6 +6,7 @@ import hashlib
 import sqlite3
 import time
 import shelve
+import sys
 
 import testgen
 
@@ -28,66 +29,65 @@ def init_db():
 	)""")
 	return db
 
-def get_csv(period='total'):
+def get_csv_linear():
+	db = init_db()
+	res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
+	csv_linear = str([["Date.parse(\"{}\")".format(tup[i]) if i == 0 else tup[i]
+		for i in range(len(tup))] for tup in res]).replace("'","")
+	return csv_linear
+
+def get_csv_heatmap():
 	db = init_db()
 	
-	if period == 'total':
-		res = db.execute("""SELECT timestamp, pixels FROM stats""").fetchall()
-		csv_linear = str([["Date.parse(\"{}\")".format(tup[i]) if i == 0 else tup[i]
-			for i in range(len(tup))] for tup in res]).replace("'","")
-		return csv_linear
-	elif period == 'day':
-		res = db.execute("""
-			SELECT z.hour,
-			100*CAST(a.N AS FLOAT)/T sun,
-			100*CAST(b.N AS FLOAT)/T mon,
-			100*CAST(c.N AS FLOAT)/T tue,
-			100*CAST(d.N AS FLOAT)/T wed,
-			100*CAST(e.N AS FLOAT)/T thu,
-			100*CAST(f.N AS FLOAT)/T fri,
-			100*CAST(g.N AS FLOAT)/T sat
-			FROM (
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    GROUP BY hour) z
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '1' GROUP BY hour) a
-				ON (z.hour = a.hour)
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '2' GROUP BY hour) b
-				ON (z.hour = b.hour)
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '3' GROUP BY hour) c
-				ON (z.hour = c.hour)
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '4' GROUP BY hour) d
-				ON (z.hour = d.hour)
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '5' GROUP BY hour) e
-				ON (z.hour = e.hour)
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '6' GROUP BY hour) f
-				ON (z.hour = f.hour)
-			  	LEFT JOIN
-				  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-				    AND STRFTIME('%w',timestamp) = '0' GROUP BY hour) g
-				ON (z.hour = g.hour)
-			  	LEFT JOIN
-				  (SELECT COUNT(*) T FROM stats)
-			)
-			""").fetchall()
-	elif period == 'week':
-		pass
+	res = db.execute("""
+	SELECT CAST(z.hour AS INTEGER),
+	a.N sun,
+	b.N mon,
+	c.N tue,
+	d.N wed,
+	e.N thu,
+	f.N fri,
+	g.N sat
+	FROM (
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    GROUP BY hour) z
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '1' GROUP BY hour) a
+		ON (z.hour = a.hour)
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '2' GROUP BY hour) b
+		ON (z.hour = b.hour)
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '3' GROUP BY hour) c
+		ON (z.hour = c.hour)
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '4' GROUP BY hour) d
+		ON (z.hour = d.hour)
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '5' GROUP BY hour) e
+		ON (z.hour = e.hour)
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '6' GROUP BY hour) f
+		ON (z.hour = f.hour)
+	  	LEFT JOIN
+		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
+		    WHERE STRFTIME('%w',timestamp) = '0' GROUP BY hour) g
+		ON (z.hour = g.hour)
+	)
+	""").fetchall()
 
-	csv = '\n'.join([','.join(map(str,c)) for c in res])
-	csv = 'date,pixels\n' + csv
-	csv = csv.replace('\n','\\n')
-	return csv
+	#print(res)
+	res = [[rr if rr != None else 0 for rr in r] for r in res]
+	mm = max([max(r) for r in res])/100
+	csv_heatmap = [[i[0], j, i[j+1]/mm] for i in res for j in range(len(i)-1)]
+	return csv_heatmap
+
 
 @app.route('/')
 def main():
@@ -143,21 +143,23 @@ def rooms():
 
 		flash('Authentication successful')
 
-	csv_linear = get_csv()
-	#csv_linear = csv_linear.replace('\n','\\n')
+	csv_linear = get_csv_linear()
+	csv_heatmap = get_csv_heatmap()
 	with open("templates/index.html",'r') as f:
 		html = f.read()
 		html = html.replace("{{ csv_linear }}", str(csv_linear))
+		html = html.replace("{{ csv_heatmap }}", str(csv_heatmap))
 		
 	# return render_template('index.html', csv_linear=csv_linear)
 	return html
 	# return testgen.render()
 
 def main():
+	debug = (len(sys.argv) > 1 and sys.argv[1] == 'debug')
 	try:
-		app.run(host='0.0.0.0', port=80, debug=True)
+		app.run(host='0.0.0.0', port=80, debug=debug)
 	except OSError:
-		app.run(host='0.0.0.0', port=9861, debug=False)
+		app.run(host='0.0.0.0', port=9861, debug=debug)
 
 if __name__ == '__main__':
 	main()
