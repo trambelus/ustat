@@ -80,7 +80,7 @@ def calibrationMode():
 	except:
 		log("Connection Failed: Check Server Status")
 		print("Connection Failed: Check Server Status")
-		continue
+		pass
 
 # This handles the image detection for the graph which can be viewed @ trambel.us/ustat
 def cameraRun():
@@ -123,7 +123,7 @@ def cameraRun():
 	except:
 		log("Connection Failed: Check Server Status")
 		print("Connection Failed: Check Server Status")
-		continue
+		pass
 
 def main():
 	try:
