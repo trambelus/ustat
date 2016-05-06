@@ -1,4 +1,4 @@
-!/bin/sh
+#!/bin/sh
 # onStartUp.sh
 # Runs camera.py on start up by changing directories and then back to original dirSectory
 
