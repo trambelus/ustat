@@ -19,6 +19,7 @@ camera = picamera.PiCamera()
 
 DELAY_RUN = 10 # 10 second delay in between pictures
 DELAY_CALIBRATION = 10 # 10 second delay in between pictures
+HEADERS = {'Auth':'8spWsLd38ji08Tpc'}
 
 def main():
 	try:
@@ -40,14 +41,12 @@ def main():
 
 				img1 = Image.open('orig.jpg')
 				img2 = Image.open('update.jpg')
-				print ("Captured Images")
+				print ("Captured New Calibration Image")
 
 				img1 = img1.filter(ImageFilter.FIND_EDGES)
 				img1.save('orig.jpg')
 				img2 = img2.filter(ImageFilter.FIND_EDGES)
 				img2.save('update.jpg')
-
-				headers = {'Auth':'8spWsLd38ji08Tpc'}
 
 				toSend = img2.resize((400, 400), Image.ANTIALIAS)
 				toSend.save('latest.png')
@@ -55,15 +54,15 @@ def main():
 
 				# The following try block makes sure the server is up and running to prevent program crashes
 				try:
-					rsp = requests.post('http://trambel.us/ustat/calibrate', files=calPicture, headers=headers) # calibration mode
+					rsp = requests.post('http://trambel.us/ustat/calibrate', files=calPicture, headers=HEADERS) # calibration mode
 					print("Check New Calibration Photo")
 				except:
 					print("Connection Failed: Check Server Status")
 					continue
 				watchDog_t += 1 # Increasing the watchdog timer value
 			else:
+				print ("Will Now Wait Ten Seconds")
 				time.sleep(DELAY_RUN) # Delay to take new pictures
-				print ("Waited Ten Seconds")
 				camera.capture('dump.jpg')
 				time.sleep(3)
 				camera.capture('orig.jpg') 
@@ -103,13 +102,11 @@ def main():
 
 				print ("Number of Black Pixels: ", black[0]) #number of black pixels
 				print ("Number of White Pixels: ", white[0]) #number of white pixels
-
-				headers = {'Auth':'8spWsLd38ji08Tpc'}
 				myData = {'pixels': white[0], 'roomid':0}
 
 				# The following try block makes sure the server is up and running to prevent program crashes
 				try:
-					rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=headers) # graph data
+					rsp = requests.post('http://trambel.us/ustat/upload', data=myData, headers=HEADERS) # graph data
 					print("Posted New Pixel Count To Server")
 				except:
 					print("Connection Failed: Check Server Status")
