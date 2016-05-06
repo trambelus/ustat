@@ -1,0 +1,21 @@
+# UstatEditsLog.txt
+# This text file contains the edits made to the ustat directory
+# camera.py
+# Edited by Chris Cox on and before 5/6/2016
+# Edit Comments: 
+#	1) Added global variable to change the time in between pictures
+#	2) Added watch dog timer
+#	3) Added correct bash command for python3
+#	4) Added Debugging messages for monitor
+#	5) Changed timer values
+#	6) Added in dynamic threshold
+#	7) prints for threshold included
+#	8) Added logging system for outputs
+#	9) Refactored code to look more professional and easier for debugging
+
+# onStartUp.sh
+# Created by Chris Cox on 5/6/2016
+#	1) Script was built to run when the RPI is powered on.
+
+# server.py
+# Run mainly by John McDouall
