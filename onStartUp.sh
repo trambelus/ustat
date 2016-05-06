@@ -4,5 +4,5 @@
 
 cd /
 cd home/pi/ustat
-sudo python 3 camera.py
+sudo python3 camera.py
 cd /
