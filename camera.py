@@ -37,7 +37,7 @@ def thresholdCalc(white_edge):
 	else: # This section will end up occuring everytime once list is full
 		print("List size : ", len(AVERAGE_L))
 		print("List : ", *AVERAGE_L, sep=', ')
-		AVERAGE_L.pop(9)
+		AVERAGE_L.pop(0)
 		print("Popped value from list, new list : ", AVERAGE_L)
 		AVERAGE_L.append(white_edge)
 		print("Appended to list : ", white_edge)
