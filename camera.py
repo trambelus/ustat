@@ -29,17 +29,17 @@ def log(*msg):
 
 # Grab last ten elements. Add all together then divide by 10 for average.  Now compare that to white 
 # pixels for dynamic threshold
-def thresholdCalc(AVERAGE_L):
+def thresholdCalc(white_edge):
 	if len(AVERAGE_L) < 11:
-		AVERAGE_L.append(white[0])
-		log("Appended value to initial list : ", white[0])
-		return white[0]
+		AVERAGE_L.append(white_edge)
+		log("Appended value to initial list : ", white_edge)
+		return white_edge
 	else: # This section will end up occuring everytime once list is full
 		print("List size : ", len(AVERAGE_L))
 		AVERAGE_L.popLeft()
 		print("Popped value from list, new list : ", AVERAGE_L)
-		AVERAGE_L.append(white[0])
-		print("Appended to list : ", white[0])
+		AVERAGE_L.append(white_edge)
+		print("Appended to list : ", white_edge)
 		TOTAL_L = sum(AVERAGE_L)
 		print("total_L = ", TOTAL_L)
 		DYNAMIC_THRESHOLD_VAL = TOTAL_L / len(AVERAGE_L)
