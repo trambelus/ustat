@@ -32,7 +32,7 @@ def log(*msg):
 def thresholdCalc(white_edge):
 	if len(AVERAGE_L) < 11:
 		AVERAGE_L.append(white_edge)
-		log("Appended value to initial list : ", white_edge)
+		log("Appended value to initial list : ", str(white_edge))
 		return white_edge
 	else: # This section will end up occuring everytime once list is full
 		print("List size : ", len(AVERAGE_L))
@@ -43,7 +43,7 @@ def thresholdCalc(white_edge):
 		TOTAL_L = sum(AVERAGE_L)
 		print("total_L = ", TOTAL_L)
 		DYNAMIC_THRESHOLD_VAL = TOTAL_L / len(AVERAGE_L)
-		log("dynamic_threshold_val : ", DYNAMIC_THRESHOLD_VAL)
+		log("dynamic_threshold_val : ", str(DYNAMIC_THRESHOLD_VAL))
 		return DYNAMIC_THRESHOLD_VAL
 
 # This handles the calibration image for the user which can be viewed @ trambel.us/ustat/calibrate
@@ -98,7 +98,7 @@ def cameraRun():
 	diff = Image.open("diff.jpg").convert('1')
 	black, white = diff.getcolors()
 	finalThresholdValue = thresholdCalc(white[0]) # Calling thresholdCalc()
-	log("finalThresholdValue : ", finalThresholdValue)
+	log("finalThresholdValue : ", str(finalThresholdValue))
 
 	log("Number of Black Pixels: ", black[0])
 	log("Number of White Pixels: ", white[0])
