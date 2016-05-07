@@ -100,8 +100,8 @@ def cameraRun():
 	finalThresholdValue = thresholdCalc(white[0]) # Calling thresholdCalc()
 	log("finalThresholdValue : ", str(finalThresholdValue))
 
-	log("Number of Black Pixels: ", black[0])
-	log("Number of White Pixels: ", white[0])
+	log("Number of Black Pixels: ", str(black[0]))
+	log("Number of White Pixels: ", str(white[0]))
 	myData = {'pixels': white[0], 'roomid':0}
 
 	# The following try block makes sure the server is up and running to prevent program crashes
