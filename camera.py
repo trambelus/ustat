@@ -105,7 +105,7 @@ def calibrationMode():
 # This handles the image detection for the graph which can be viewed @ trambel.us/ustat
 def cameraRun():
 	log("Gathering IP Address...")
-	if IP_ADDRESS not INITIAL_IP:
+	if IP_ADDRESS is not INITIAL_IP:
 		IP_ADDRESS = getIPAddress()
 		log("NEW IP : ", IP_ADDRESS)
 	log("Will Now Wait Ten Seconds")
