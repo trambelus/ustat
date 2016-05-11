@@ -17,6 +17,7 @@ def getIPAddress():
 	ni.ifaddresses('eth0')
 	IP = ni.ifaddresses('eth0')[2][0]['addr']
 	IPLog('Current IP Address : ', str(IP))
+	print('TYPE IS = ', type(IP))
 	return IP
 
 # Logs the current IP Address and prints it to the screen
@@ -35,7 +36,7 @@ def initIP():
 def checkIP():
 	time.sleep(DELAY)
 	IP_ADDRESS = getIPAddress()
-	if IP_ADDRESS != INITIAL_IP:
+	if str(IP_ADDRESS) != str(INITIAL_IP):
 		IPLog("NEW IP : ", IP_ADDRESS)
 
 def main():
