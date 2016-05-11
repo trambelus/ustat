@@ -35,14 +35,14 @@ def thresholdCalc(white_edge):
 		log("Appended value to initial list : ", str(white_edge))
 		return white_edge
 	else: # This section will end up occuring everytime once list is full
-		print("List size : ", len(AVERAGE_L))
-		print("List : ", *AVERAGE_L, sep=', ')
+		#print("List size : ", len(AVERAGE_L))
+		#print("List : ", *AVERAGE_L, sep=', ')
 		AVERAGE_L.pop(0)
-		print("Popped value from list, new list : ", AVERAGE_L)
+		#print("Popped value from list, new list : ", AVERAGE_L)
 		AVERAGE_L.append(white_edge)
-		print("Appended to list : ", white_edge)
+		#print("Appended to list : ", white_edge)
 		TOTAL_L = sum(AVERAGE_L)
-		print("total_L = ", TOTAL_L)
+		#print("total_L = ", TOTAL_L)
 		DYNAMIC_THRESHOLD_VAL = TOTAL_L / len(AVERAGE_L)
 		log("dynamic_threshold_val : ", str(DYNAMIC_THRESHOLD_VAL))
 		return DYNAMIC_THRESHOLD_VAL
@@ -133,7 +133,7 @@ def main():
 			else:
 				# ***Camera Run Mode ***
 				cameraRun()
-			watchDog_t += 1 # Increasing the watchdog timer value
+				watchDog_t += 1 # Increasing the watchdog timer value
 	except KeyboardInterrupt:
 		print ("keyboard interrupt")
 
