@@ -40,6 +40,7 @@ def checkIP():
 
 def main():
 	try:
+		time.sleep(100)
 		initIP()
 		while True:
 			checkIP()
