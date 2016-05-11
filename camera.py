@@ -47,6 +47,12 @@ def thresholdCalc(white_edge):
 		log("dynamic_threshold_val : ", str(DYNAMIC_THRESHOLD_VAL))
 		return DYNAMIC_THRESHOLD_VAL
 
+# Calculate the room determiend value (RDV).
+# This is done using the dynamic threshold value minus the current white pixel value
+def roomDeterminedValue(thresholdValue, white_pixels):
+	RDV = thresholdValue - white_pixels
+	return RDV
+
 # This handles the calibration image for the user which can be viewed @ trambel.us/ustat/calibrate
 def calibrationMode():
 	time.sleep(DELAY_CALIBRATION) # Delay to take new pictures
@@ -100,10 +106,11 @@ def cameraRun():
 	black, white = diff.getcolors()
 	finalThresholdValue = thresholdCalc(white[0]) # Calling thresholdCalc()
 	log("finalThresholdValue : ", str(finalThresholdValue))
-
+	RDVtoPost = roomDeterminedValue(finalThresholdValue, white[0]) # Getting the value to post to the view
+	log("RDVtoPost : ", str(RDVtoPost))
 	log("Number of Black Pixels: ", str(black[0]))
 	log("Number of White Pixels: ", str(white[0]))
-	myData = {'pixels': white[0], 'roomid':0}
+	myData = {'pixels': RDVtoPost, 'roomid':0}
 
 	# The following try block makes sure the server is up and running to prevent program crashes
 	try:
