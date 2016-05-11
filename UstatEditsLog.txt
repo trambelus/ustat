@@ -1,5 +1,6 @@
 # UstatEditsLog.txt
 # This text file contains the edits made to the ustat directory
+
 # camera.py
 # Edited by Chris Cox on and before 5/6/2016
 # Edit Comments: 
@@ -12,6 +13,16 @@
 #	7) prints for threshold included
 #	8) Added logging system for outputs
 #	9) Refactored code to look more professional and easier for debugging
+#
+# Edited by Chris Cox on 5/11/2016
+# Edit Comments: 
+#	1) Removed some Debugs and added functionality for the proper threshold value
+#	2) Sends correct value to the server
+
+# ip_log.py
+# Created by Chris Cox on 5/11/2016
+# Edit Comments:
+#	1) Built to log the IP Address of the RPI to ensure that dhcp leasing works correctly
 
 # onStartUp.sh
 # Created by Chris Cox on 5/6/2016
@@ -19,3 +30,7 @@
 
 # server.py
 # Run mainly by John McDouall
+#
+# Edited by Chris Cox on 5/11/2016
+# Edit Comments: 
+#	1) Added user login and password functionality to /ustat and /ustat/calibrate

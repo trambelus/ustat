@@ -10,5 +10,6 @@ echo "onStartUp.sh: Sending IP $ipaddr to server"
 
 cd /
 cd home/pi/ustat
-sudo python3 camera.py &
+sudo python3 camera.py &  # Starts camera.py and runs it in the background
+sudo python3 ip_log.py &  # Starts ip_log.py and runs it in the background
 cd /

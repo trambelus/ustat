@@ -1,39 +1,21 @@
 #!/usr/bin/env python3
 # ustat
-# Last Edit: 5/6/2016; Chris Cox
+# Last Edit: 5/11/2016; Chris Cox
 
 from PIL import Image, ImageFilter, ImageChops
 import picamera
 import math, operator
 import time
 import requests
-import netifaces as ni
 camera = picamera.PiCamera()
 
 LOGFILE = 'camera_py.log'
-IPLOGFILE = 'IP_Address_File.log' # Holds the logged IP Addresses
-IP_ADDRESS = '0.0.0.0' # Current IP Address
-INITIAL_IP = '1.1.1.1' # Initial IP Adress
 DELAY_RUN = 10 # 10 second delay in between pictures
 DELAY_CALIBRATION = 10 # 10 second delay in between pictures
 HEADERS = {'Auth':'8spWsLd38ji08Tpc'}
 AVERAGE_L = [] # Creating average list for dynamic threshold value
 TOTAL_L = 0 # Initalizing total value of list
 DYNAMIC_THRESHOLD_VAL = 0 # Initializing value for dynamic threshold average value
-
-# Returns current IP Address
-def getIPAddress():
-	ni.ifaddresses('eth0')
-	IP = ni.ifaddresses('eth0')[2][0]['addr']
-	IPLog('Current IP Address : ', str(IP))
-	return IP
-
-# Logs the current IP Address and prints it to the screen
-def IPLog(*msg):
-	output = "%s:\t%s" % (time.strftime("%Y-%m-%d %X"), ' '.join(msg))
-	print(output)
-	with open(IPLOGFILE, 'a') as f:
-		f.write(output + '\n')
 
 # Credits to log : John McDouall
 def log(*msg):
@@ -73,7 +55,6 @@ def roomDeterminedValue(thresholdValue, white_pixels):
 
 # This handles the calibration image for the user which can be viewed @ trambel.us/ustat/calibrate
 def calibrationMode():
-	INITIAL_IP = getIPAddress()
 	time.sleep(DELAY_CALIBRATION) # Delay to take new pictures
 	log("Waited Ten Seconds For New Calibration")
 
@@ -104,10 +85,6 @@ def calibrationMode():
 
 # This handles the image detection for the graph which can be viewed @ trambel.us/ustat
 def cameraRun():
-	log("Gathering IP Address...")
-	if IP_ADDRESS is not INITIAL_IP:
-		IP_ADDRESS = getIPAddress()
-		log("NEW IP : ", IP_ADDRESS)
 	log("Will Now Wait Ten Seconds")
 	time.sleep(DELAY_RUN) # Delay to take new pictures
 	camera.capture('dump.jpg')
