@@ -8,9 +8,11 @@ import netifaces as ni
 import time
 
 IPLOGFILE = 'IP_Address_File.log' # Holds the logged IP Addresses
-IP_ADDRESS = '0.0.0.0' # Current IP Address
-INITIAL_IP = '1.1.1.1' # Initial IP Adress
 DELAY = 20 # 20 second delay to check IP Address
+
+# Defining global variables
+global IP_ADDRESS = '0.0.0.0' # Current IP Address
+global INITIAL_IP = '1.1.1.1' # Initial IP Adress
 
 # Returns current IP Address
 def getIPAddress():

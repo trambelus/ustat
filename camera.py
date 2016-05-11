@@ -13,9 +13,11 @@ LOGFILE = 'camera_py.log'
 DELAY_RUN = 10 # 10 second delay in between pictures
 DELAY_CALIBRATION = 10 # 10 second delay in between pictures
 HEADERS = {'Auth':'8spWsLd38ji08Tpc'}
-AVERAGE_L = [] # Creating average list for dynamic threshold value
-TOTAL_L = 0 # Initalizing total value of list
-DYNAMIC_THRESHOLD_VAL = 0 # Initializing value for dynamic threshold average value
+
+# Defining global variables
+global AVERAGE_L = [] # Creating average list for dynamic threshold value
+global TOTAL_L = 0 # Initalizing total value of list
+global DYNAMIC_THRESHOLD_VAL = 0 # Initializing value for dynamic threshold average value
 
 # Credits to log : John McDouall
 def log(*msg):
