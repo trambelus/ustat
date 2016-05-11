@@ -35,7 +35,7 @@ def initIP():
 def checkIP():
 	time.sleep(DELAY)
 	IP_ADDRESS = getIPAddress()
-	if IP_ADDRESS is not INITIAL_IP:
+	if IP_ADDRESS != INITIAL_IP:
 		IPLog("NEW IP : ", IP_ADDRESS)
 
 def main():
