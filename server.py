@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, flash, redirect,  render_template, url_for, abort
+from functools import wraps
+from flask import Flask, Response, request, flash, redirect,  render_template, url_for, abort
 from pprint import pprint
 import hashlib
 import sqlite3
@@ -88,6 +89,29 @@ def get_csv_heatmap():
 	csv_heatmap = [[i[0], j, i[j+1]/mm] for i in res for j in range(len(i)-1)]
 	return csv_heatmap
 
+# Checks the user entered information for authentication for /ustat
+def check_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == 'ustat admin' and password == 'secret password'
+
+# Checks the authentication for /ustat
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 @app.route('/')
 def main():
@@ -111,6 +135,7 @@ def upload():
 		abort(403)
 
 @app.route('/ustat/calibrate', methods=['GET','POST'])
+@requires_auth
 def calibration():
 	if request.method == 'POST':
 		# Uploading calibration image
@@ -130,6 +155,7 @@ def favicon():
 	return url_for('static',filename='favicon.ico')
 
 @app.route('/ustat', methods=['GET','POST'])
+@requires_auth
 def rooms():
 	if request.method == 'POST':
 		with open('hash.txt','r') as f:
