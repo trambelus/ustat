@@ -11,15 +11,14 @@ IPLOGFILE = 'IP_Address_File.log' # Holds the logged IP Addresses
 DELAY = 20 # 20 second delay to check IP Address
 
 # Defining global variables
-global IP_ADDRESS = '0.0.0.0' # Current IP Address
-global INITIAL_IP = '1.1.1.1' # Initial IP Adress
+IP_ADDRESS = '0.0.0.0' # Current IP Address
+INITIAL_IP = '1.1.1.1' # Initial IP Adress
 
 # Returns current IP Address
 def getIPAddress():
 	ni.ifaddresses('eth0')
 	IP = ni.ifaddresses('eth0')[2][0]['addr']
 	IPLog('Current IP Address : ', str(IP))
-	print('TYPE IS = ', type(IP))
 	return IP
 
 # Logs the current IP Address and prints it to the screen
@@ -32,12 +31,12 @@ def IPLog(*msg):
 def initIP():
 	IPLog("Gathering IP Address...")
 	IPLog("Initial IP Address Acquired")
-	INITIAL_IP = getIPAddress()
+	global INITIAL_IP = getIPAddress()
 	time.sleep(DELAY)
 
 def checkIP():
 	time.sleep(DELAY)
-	IP_ADDRESS = getIPAddress()
+	global IP_ADDRESS = getIPAddress()
 	if str(IP_ADDRESS) != str(INITIAL_IP):
 		IPLog("NEW IP : ", IP_ADDRESS)
 
