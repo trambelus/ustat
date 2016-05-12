@@ -51,34 +51,34 @@ def get_csv_heatmap():
 	g.N sat
 	FROM (
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    GROUP BY hour) z
+			GROUP BY hour) z
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '1' GROUP BY hour) a
+			WHERE STRFTIME('%w',timestamp) = '1' GROUP BY hour) a
 		ON (z.hour = a.hour)
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '2' GROUP BY hour) b
+			WHERE STRFTIME('%w',timestamp) = '2' GROUP BY hour) b
 		ON (z.hour = b.hour)
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '3' GROUP BY hour) c
+			WHERE STRFTIME('%w',timestamp) = '3' GROUP BY hour) c
 		ON (z.hour = c.hour)
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '4' GROUP BY hour) d
+			WHERE STRFTIME('%w',timestamp) = '4' GROUP BY hour) d
 		ON (z.hour = d.hour)
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '5' GROUP BY hour) e
+			WHERE STRFTIME('%w',timestamp) = '5' GROUP BY hour) e
 		ON (z.hour = e.hour)
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '6' GROUP BY hour) f
+			WHERE STRFTIME('%w',timestamp) = '6' GROUP BY hour) f
 		ON (z.hour = f.hour)
 	  	LEFT JOIN
 		  (SELECT STRFTIME('%H',timestamp) hour, SUM(pixels) N FROM stats
-		    WHERE STRFTIME('%w',timestamp) = '0' GROUP BY hour) g
+			WHERE STRFTIME('%w',timestamp) = '0' GROUP BY hour) g
 		ON (z.hour = g.hour)
 	)
 	""").fetchall()
@@ -91,28 +91,28 @@ def get_csv_heatmap():
 
 # Checks the user entered information for authentication for /ustat
 def check_auth(username, password):
-    """This function is called to check if a username /
-    password combination is valid.
-    """
-    return username == 'ustat admin' and password == 'secret password'
+	"""This function is called to check if a username /
+	password combination is valid.
+	"""
+	return username == 'ustat admin' and password == 'secret password'
 
 # Checks the authentication for /ustat
 def authenticate():
-    """Sends a 401 response that enables basic auth"""
-    return Response(
-    'Could not verify your access level for that URL.\n'
-    'You have to login with proper credentials', 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+	"""Sends a 401 response that enables basic auth"""
+	return Response(
+	'Could not verify your access level for that URL.\n'
+	'You have to login with proper credentials', 401,
+	{'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
-        	if request.headers['Auth'] != '8spWsLd38ji08Tpc': # Lets the RPI post the picture
-            	return authenticate()
-        	return f(*args, **kwargs)
-    return decorated
+	@wraps(f)
+	def decorated(*args, **kwargs):
+		auth = request.authorization
+		if not auth or not check_auth(auth.username, auth.password):
+			if request.headers['Auth'] != '8spWsLd38ji08Tpc': # Lets the RPI post the picture
+				return authenticate()
+			return f(*args, **kwargs)
+	return decorated
 
 @app.route('/')
 def main():
