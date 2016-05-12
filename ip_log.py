@@ -29,20 +29,22 @@ def IPLog(*msg):
 		f.write(output + '\n')
 
 def initIP():
+	global INITIAL_IP
 	IPLog("Gathering IP Address...")
 	IPLog("Initial IP Address Acquired")
-	global INITIAL_IP = getIPAddress()
+	INITIAL_IP = getIPAddress()
 	time.sleep(DELAY)
 
 def checkIP():
+	global IP_ADDRESS
 	time.sleep(DELAY)
-	global IP_ADDRESS = getIPAddress()
+	IP_ADDRESS = getIPAddress()
 	if str(IP_ADDRESS) != str(INITIAL_IP):
 		IPLog("NEW IP : ", IP_ADDRESS)
 
 def main():
 	try:
-		time.sleep(100)
+		time.sleep(100) # Delaying Initial start of the program in order for RPI to get IP ADDRESS
 		initIP()
 		while True:
 			checkIP()
