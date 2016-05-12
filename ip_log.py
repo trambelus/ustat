@@ -8,7 +8,7 @@ import netifaces as ni
 import time
 
 IPLOGFILE = 'IP_Address_File.log' # Holds the logged IP Addresses
-DELAY = 20 # 20 second delay to check IP Address; DHCP lease is 10800 second
+DELAY = 11000 # 11000 second delay to check IP Address; DHCP lease is 10800 second
 
 # Defining global variables
 IP_ADDRESS = '0.0.0.0' # Current IP Address
