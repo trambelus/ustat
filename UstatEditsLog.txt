@@ -23,6 +23,10 @@
 # Created by Chris Cox on 5/11/2016
 # Edit Comments:
 #	1) Built to log the IP Address of the RPI to ensure that dhcp leasing works correctly
+#
+# Edited by Chris Cox on 5/12/2016
+# Edit Comments:
+#	1) Changed IP Log time to run every 11000 secs due to lease time being 10800 seconds
 
 # onStartUp.sh
 # Created by Chris Cox on 5/6/2016
@@ -34,3 +38,7 @@
 # Edited by Chris Cox on 5/11/2016
 # Edit Comments: 
 #	1) Added user login and password functionality to /ustat and /ustat/calibrate
+#
+# Edited by Chris Cox on 5/12/2016
+# Edit Comments: 
+#	1) Fixed authenication issue between RPI and server for:  /ustat/calibrate

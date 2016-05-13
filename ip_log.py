@@ -33,7 +33,7 @@ def initIP():
 	IPLog("Gathering IP Address...")
 	IPLog("Initial IP Address Acquired")
 	INITIAL_IP = getIPAddress()
-	time.sleep(DELAY)
+	time.sleep(100)
 
 def checkIP():
 	global IP_ADDRESS

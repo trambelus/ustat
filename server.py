@@ -109,9 +109,8 @@ def requires_auth(f):
     def decorated(*args, **kwargs):
         auth = request.authorization
         if not auth or not check_auth(auth.username, auth.password):
-        	if request.headers['Auth'] != '8spWsLd38ji08Tpc': # Lets the RPI post the picture
-            	return authenticate()
-        	return f(*args, **kwargs)
+            return authenticate()
+        return f(*args, **kwargs)
     return decorated
 
 @app.route('/')
@@ -136,7 +135,6 @@ def upload():
 		abort(403)
 
 @app.route('/ustat/calibrate', methods=['GET','POST'])
-@requires_auth
 def calibration():
 	if request.method == 'POST':
 		# Uploading calibration image
